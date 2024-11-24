@@ -1,4 +1,4 @@
-% load static %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -134,9 +134,8 @@
       const AUTH_USER_ID =  "{{request.user.id}}"
       const CSRF_TOKEN = "{{ csrf_token }}"
     </script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js""
-    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js">
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="{% static 'agora/index.js' %}"></script>
   </body>
