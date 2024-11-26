@@ -6,24 +6,24 @@ let UID = sessionStorage.getItem('UID')
 
 let NAME = sessionStorage.getItem('name')
 
-const client = AgoraRTC.createClient({mode:'rtc', codec:'vp8'})
+const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' })
 
 let localTrack = []
 let remoteUsers = {}
 
-let joinAndDisplayLocalStream=async () =>{
+let joinAndDisplayLocalStream = async () => {
     document.getElementById('room-name').innerText = CHANNEL
 
     client.on('user-published', handleUserJoined)
     client.on('user-left', handleUserLeft)
 
-    try{
+    try {
         UID = await client.join(APP_ID, CHANNEL, TOKEN, UID)
-    }catch(error){
+    } catch (error) {
         console.error(error)
         window.open('/', '_self')
     }
-    
+
     localTracks = await AgoraRTC.createMicrophoneAndCameraTracks()
 
     let member = await createMember()
@@ -32,7 +32,7 @@ let joinAndDisplayLocalStream=async () =>{
                      <div class="video-player" id="user-${UID}"></div>
                      <div class="username-wrapper"><span class="user-name">${member.name}</span></div>
                   </div>`
-    
+
     document.getElementById('video-streams').insertAdjacentHTML('beforeend', player)
     localTracks[1].play(`user-${UID}`)
     await client.publish([localTracks[0], localTracks[1]])
@@ -42,9 +42,9 @@ let handleUserJoined = async (user, mediaType) => {
     remoteUsers[user.uid] = user
     await client.subscribe(user, mediaType)
 
-    if (mediaType === 'video'){
+    if (mediaType === 'video') {
         let player = document.getElementById(`user-container-${user.uid}`)
-        if (player != null){
+        if (player != null) {
             player.remove()
         }
 
@@ -59,7 +59,7 @@ let handleUserJoined = async (user, mediaType) => {
         user.videoTrack.play(`user-${user.uid}`)
     }
 
-    if (mediaType === 'audio'){
+    if (mediaType === 'audio') {
         user.audioTrack.play()
     }
 }
@@ -70,7 +70,7 @@ let handleUserLeft = async (user) => {
 }
 
 let leaveAndRemoveLocalStream = async () => {
-    for (let i=0; localTracks.length > i; i++){
+    for (let i = 0; localTracks.length > i; i++) {
         localTracks[i].stop()
         localTracks[i].close()
     }
@@ -83,10 +83,10 @@ let leaveAndRemoveLocalStream = async () => {
 
 let toggleCamera = async (e) => {
     console.log('TOGGLE CAMERA TRIGGERED')
-    if(localTracks[1].muted){
+    if (localTracks[1].muted) {
         await localTracks[1].setMuted(false)
         e.target.style.backgroundColor = '#fff'
-    }else{
+    } else {
         await localTracks[1].setMuted(true)
         e.target.style.backgroundColor = 'rgb(255, 80, 80, 1)'
     }
@@ -94,10 +94,10 @@ let toggleCamera = async (e) => {
 
 let toggleMic = async (e) => {
     console.log('TOGGLE MIC TRIGGERED')
-    if(localTracks[0].muted){
+    if (localTracks[0].muted) {
         await localTracks[0].setMuted(false)
         e.target.style.backgroundColor = '#fff'
-    }else{
+    } else {
         await localTracks[0].setMuted(true)
         e.target.style.backgroundColor = 'rgb(255, 80, 80, 1)'
     }
@@ -105,11 +105,11 @@ let toggleMic = async (e) => {
 
 let createMember = async () => {
     let response = await fetch('/create_member/', {
-        method:'POST',
+        method: 'POST',
         headers: {
-            'Content-Type':'application/json'
+            'Content-Type': 'application/json'
         },
-        body:JSON.stringify({'name':NAME, 'room_name':CHANNEL, 'UID':UID})
+        body: JSON.stringify({ 'name': NAME, 'room_name': CHANNEL, 'UID': UID })
     })
     let member = await response.json()
     return member
@@ -124,16 +124,16 @@ let getMember = async (user) => {
 
 let deleteMember = async () => {
     let response = await fetch('/delete_member/', {
-        method:'POST',
+        method: 'POST',
         headers: {
-            'Content-Type':'application/json'
+            'Content-Type': 'application/json'
         },
-        body:JSON.stringify({'name':NAME, 'room_name':CHANNEL, 'UID':UID})
+        body: JSON.stringify({ 'name': NAME, 'room_name': CHANNEL, 'UID': UID })
     })
     let member = await response.json()
 }
 
-window.addEventListener("beforeunload",deleteMember);
+window.addEventListener("beforeunload", deleteMember);
 
 joinAndDisplayLocalStream()
 
