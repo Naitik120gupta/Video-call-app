@@ -1,13 +1,19 @@
 import time
 import json
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import JsonResponse
 import random
 import time
-from agora_token_builder import RtcTokenBuilder
 from .models import RoomMember
 from django.views.decorators.csrf import csrf_exempt
 
+
+
+def chatPage(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect("login-user")
+    context = {}
+    return render(request, "chatPage.html", context)
 
 
 def lobby(request):
