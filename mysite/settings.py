@@ -1,5 +1,6 @@
 import dotenv
 from pathlib import Path
+import os
 
 
 dotenv.load_dotenv()
@@ -26,7 +27,12 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'agora',
     'daphne',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
     'channels',
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -68,6 +74,29 @@ TEMPLATES = [
         },
     },
 ]
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+AUTH_USER_MODEL = 'agora.User'
+
+EMAIL_BACKEND = os.env('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+
+
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None  # No username field in the custom user model
+ACCOUNT_USERNAME_REQUIRED = False        # Do not require username
+ACCOUNT_EMAIL_REQUIRED = True           # Require email
+ACCOUNT_AUTHENTICATION_METHOD = 'email' # Use email for login
+ACCOUNT_EMAIL_VERIFICATION = "optional" # Set to "mandatory" for stricter flow
+
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 ASGI_APPLICATION = 'mysite.asgi.application'
