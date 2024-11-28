@@ -1,4 +1,4 @@
-agora==1.2.3
+﻿agora==1.2.3
 agora_python_server_sdk==2.1.4
 agora_token_builder==1.0.0
 argh==0.31.3

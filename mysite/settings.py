@@ -27,10 +27,10 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'agora',
     'daphne',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.google',
     'channels',
     'rest_framework',
     'django.contrib.admin',
@@ -51,18 +51,18 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
-    }
-}
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels.layers.InMemoryChannelLayer"
+#     }
+# }
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
-OCIALACCOUNT_PROVIDERS = {
+SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
             'client_id': '805701739913-lmeot3i7ig76oqee63tpndsvik6cgroq.apps.googleusercontent.com',
@@ -92,11 +92,11 @@ TEMPLATES = [
 SITE_ID = 1
 
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login/'
 
 AUTH_USER_MODEL = 'agora.User'
 
-EMAIL_BACKEND = os.env('EMAIL_BACKEND')
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
 EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_PORT = os.getenv('EMAIL_PORT')
 EMAIL_USE_TLS = True
