@@ -57,6 +57,21 @@ CHANNEL_LAYERS = {
     }
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+OCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '805701739913-lmeot3i7ig76oqee63tpndsvik6cgroq.apps.googleusercontent.com',
+            'secret': os.getenv('SECRET_KEY'),
+            'key': ''
+        }
+    }
+}
+
 ROOT_URLCONF = 'mysite.urls'
 
 TEMPLATES = [
