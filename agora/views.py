@@ -3,7 +3,7 @@ import json
 from django.shortcuts import render,redirect
 from django.http import JsonResponse
 import random
-import time
+import os
 from .models import RoomMember
 from django.views.decorators.csrf import csrf_exempt
 from .serializers import RegisterSerializer, LoginSerializer,RequestPasswordResetSerializer, SetNewPasswordSerializer
@@ -17,6 +17,8 @@ import requests
 from django.http import JsonResponse
 from django.conf import settings
 import base64
+import dotenv
+dotenv.load_dotenv()
 
 User = get_user_model()
 
@@ -64,8 +66,8 @@ def start_recording(request):
                 "vendor": 1,
                 "region": 0,
                 "bucket": "agorabucket12",
-                "accessKey": "AKIAU7RBSM7NRSIAIF6M",
-                "secretKey": "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",
+                "accessKey": os.getenv('accesskey'),
+                "secretKey": os.getenv('secretkey'),
                 "fileNamePrefix": ["audio", "meeting-records"],
             },
         },
