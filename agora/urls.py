@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import RegisterView, LoginView, PasswordResetRequestView,SetNewPasswordView
+from .views import RegisterView, LoginView, PasswordResetRequestView,SetNewPasswordView,acquire_resource,start_recording,stop_recording
 
 
 
@@ -17,4 +17,8 @@ urlpatterns = [
     path('create_member/', views.createMember),
     path('get_member/', views.getMember),
     path('delete_member/', views.deleteMember),
+
+    path('acquire/', acquire_resource, name='acquire_resource'),
+    path('start/', start_recording, name='start_recording'),
+    path('stop/', stop_recording, name='stop_recording'),
 ]

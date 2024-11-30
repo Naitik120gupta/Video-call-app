@@ -13,8 +13,90 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from agora_token_builder import RtcTokenBuilder
+import requests
+from django.http import JsonResponse
+from django.conf import settings
+import base64
 
 User = get_user_model()
+
+# APP_ID='2f3131394cc6417b91aa93cfde567a37'
+# APP_CERTIFICATE='d66d80fb791f48df8f91fdd513d82d32'
+# BASE_URL = "https://api.agora.io/v1"
+
+
+def acquire_resource(request):
+    url = f"https://api.agora.io/v1/apps/{settings.AGORA_APP_ID}/cloud_recording/acquire"
+    headers = {
+        "Authorization": f"Basic {settings.AGORA_AUTH_HEADER}",
+        "Content-Type": "application/json",
+    }
+    data = {
+        "cname": request.GET.get("channel_name", "testChannel"),
+        "uid": request.GET.get("uid", "12345"),
+        "clientRequest": {},
+    }
+
+    response = requests.post(url, headers=headers, json=data)
+    return JsonResponse(response.json())
+
+def start_recording(request):
+    resource_id = request.GET.get("resource_id")
+    channel_name = request.GET.get("channel_name", "testChannel")
+    uid = request.GET.get("uid", "12345")
+    url = f"https://api.agora.io/v1/apps/{settings.AGORA_APP_ID}/cloud_recording/resourceid/{resource_id}/mode/mix/start"
+    
+    headers = {
+        "Authorization": f"Basic {settings.AGORA_AUTH_HEADER}",
+        "Content-Type": "application/json",
+    }
+    data = {
+        "cname": channel_name,
+        "uid": uid,
+        "clientRequest": {
+            "recordingConfig": {
+                "channelType": 0,
+                "streamTypes": 1,
+                "audioProfile": 1,
+                "maxIdleTime": 30,
+            },
+            "storageConfig": {
+                "vendor": 1,
+                "region": 0,
+                "bucket": "agorabucket12",
+                "accessKey": "AKIAU7RBSM7NRSIAIF6M",
+                "secretKey": "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",
+                "fileNamePrefix": ["audio", "meeting-records"],
+            },
+        },
+    }
+
+    response = requests.post(url, headers=headers, json=data)
+    return JsonResponse(response.json())
+
+
+def stop_recording(request):
+    resource_id = request.GET.get("resource_id")
+    sid = request.GET.get("sid")
+    channel_name = request.GET.get("channel_name", "testChannel")
+    uid = request.GET.get("uid", "12345")
+    url = f"https://api.agora.io/v1/apps/{settings.AGORA_APP_ID}/cloud_recording/resourceid/{resource_id}/sid/{sid}/mode/mix/stop"
+    
+    headers = {
+        "Authorization": f"Basic {settings.AGORA_AUTH_HEADER}",
+        "Content-Type": "application/json",
+    }
+    data = {
+        "cname": channel_name,
+        "uid": uid,
+        "clientRequest": {},
+    }
+
+    response = requests.post(url, headers=headers, json=data)
+    return JsonResponse(response.json())
+
+
+
 
 
 # Password Reset Request View
@@ -138,5 +220,4 @@ def deleteMember(request):
     )
     member.delete()
     return JsonResponse('Member deleted', safe=False)
-
 

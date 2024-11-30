@@ -1,6 +1,7 @@
 import dotenv
 from pathlib import Path
 import os
+import base64
 
 
 dotenv.load_dotenv()
@@ -163,6 +164,20 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+
+
+
+
+AGORA_APP_ID='2f3131394cc6417b91aa93cfde567a37'
+AGORA_APP_CERTIFICATE='d66d80fb791f48df8f91fdd513d82d32'
+BASE_URL = "https://api.agora.io/v1"
+
+
+AGORA_AUTH_HEADER = base64.b64encode(f"{AGORA_APP_ID}:{AGORA_APP_CERTIFICATE}".encode()).decode()
+
+# AGORA_AUTH_HEADER = base64.b64encode(f"{AGORA_APP_ID}:{AGORA_APP_CERTIFICATE}".encode()).decode()
+
 
 
 # Static files (CSS, JavaScript, Images)
