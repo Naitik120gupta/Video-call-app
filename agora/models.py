@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+
+
+# Custom User Manager
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -35,6 +38,8 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
 
 class RoomMember(models.Model):
     name = models.CharField(max_length=200)

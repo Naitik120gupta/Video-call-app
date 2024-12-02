@@ -13,7 +13,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'message': 'Connected Successfully'
         }))
-    
+
     async def disconnect(self, close_code):
         print(f"Disconnecting: {self.channel_name}")
         await self.channel_layer.group_discard(
