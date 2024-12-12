@@ -1,7 +1,7 @@
 import dotenv
 from pathlib import Path
 import os
-import base64
+# import base64
 
 
 dotenv.load_dotenv()
@@ -113,11 +113,11 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
 
 
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None  # No username field in the custom user model
-ACCOUNT_USERNAME_REQUIRED = False        # Do not require username
-ACCOUNT_EMAIL_REQUIRED = True           # Require email
-ACCOUNT_AUTHENTICATION_METHOD = 'email' # Use email for login
-ACCOUNT_EMAIL_VERIFICATION = "optional" # Set to "mandatory" for stricter flow
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = None  # No username field in the custom user model
+# ACCOUNT_USERNAME_REQUIRED = False        # Do not require username
+# ACCOUNT_EMAIL_REQUIRED = True           # Require email
+# ACCOUNT_AUTHENTICATION_METHOD = 'email' # Use email for login
+# ACCOUNT_EMAIL_VERIFICATION = "optional" # Set to "mandatory" for stricter flow
 
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
@@ -174,9 +174,8 @@ AGORA_APP_CERTIFICATE='d66d80fb791f48df8f91fdd513d82d32'
 BASE_URL = "https://api.agora.io/v1"
 
 
-AGORA_AUTH_HEADER = base64.b64encode(f"{AGORA_APP_ID}:{AGORA_APP_CERTIFICATE}".encode()).decode()
-
 # AGORA_AUTH_HEADER = base64.b64encode(f"{AGORA_APP_ID}:{AGORA_APP_CERTIFICATE}".encode()).decode()
+
 
 
 

@@ -32,7 +32,7 @@ dotenv.load_dotenv()
 # APP_CERTIFICATE='d66d80fb791f48df8f91fdd513d82d32'
 # BASE_URL = "https://api.agora.io/v1"
 
-
+#Recording views
 def acquire_resource(request):
     url = f"https://api.agora.io/v1/apps/{settings.AGORA_APP_ID}/cloud_recording/acquire"
     headers = {
@@ -107,7 +107,7 @@ def stop_recording(request):
 
 
 
-# Password Reset Request View
+#Login-Signup Views
 class PasswordResetRequestView(APIView):
     def post(self, request):
         serializer = RequestPasswordResetSerializer(data=request.data)
@@ -194,6 +194,8 @@ class VerifyOTPView(APIView):
 
 
 
+
+#Agora routes
 def chatPage(request, *args, **kwargs):
     if not request.user.is_authenticated:
         return redirect("login-user")

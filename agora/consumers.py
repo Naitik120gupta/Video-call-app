@@ -2,9 +2,11 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 class ChatConsumer(AsyncWebsocketConsumer):
+
     async def connect(self):
         print("WebSocket connection attempted")
-        self.roomGroupName="Main"
+        self.room_name = self.scope['url_route']['kwargs']['room']
+        self.roomGroupName=f'chat_{self.room_name}'
         await self.channel_layer.group_add(
             self.roomGroupName ,
             self.channel_name
@@ -13,7 +15,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'message': 'Connected Successfully'
         }))
-
+    
     async def disconnect(self, close_code):
         print(f"Disconnecting: {self.channel_name}")
         await self.channel_layer.group_discard(
