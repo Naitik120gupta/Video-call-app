@@ -10,6 +10,8 @@ from .serializers import RegisterSerializer, LoginSerializer,RequestPasswordRese
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from agora_token_builder import RtcTokenBuilder
@@ -147,21 +149,42 @@ class SetNewPasswordView(APIView):
                 return Response({"error": "User does not exist."}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class RegisterView(APIView):
     def post(self, request):
+        first_name = request.data.get('first_name')
+        last_name = request.data.get('last_name')
+        phone = request.data.get('phone')
         email = request.data.get('email')
         password = request.data.get('password')
 
+        # Validation for required fields
+        if not (first_name and last_name and phone and email and password):
+            return Response({'error': 'All fields are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if the email is already registered
         if User.objects.filter(email=email).exists():
             return Response({'error': 'User already exists'}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Generate OTP
         otp = generate_otp()
-        user = User.objects.create(email=email, otp=otp)
+
+        # Create user
+        user = User.objects.create(
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            phone=phone,
+            otp=otp
+        )
         user.set_password(password)
         user.save()
 
+        # Send OTP email
         send_otp_email(email, otp)
+
         return Response({'message': 'OTP sent to your email'}, status=status.HTTP_201_CREATED)
+
 
 class LoginView(APIView):
     def post(self, request):
@@ -177,6 +200,27 @@ class LoginView(APIView):
             send_otp_email(email, otp)
             return Response({'message': 'OTP sent to your email'}, status=status.HTTP_200_OK)
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+    
+class profileview(APIView):
+    def post(self,request):
+        email=request.data.get('email')
+
+        user = User.objects.filter(email=email).first()
+        if user:
+            return JsonResponse({'First name:':user.first_name,'Last name':user.last_name,'email':user.email,'Phone':user.phone})
+
+class UpdateUserInfoView(APIView):
+    permission_classes = [IsAuthenticated]  # Require user authentication
+
+    def put(self, request):
+        user = request.user  # Get the currently authenticated user
+        serializer = RegisterSerializer(user, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'User information updated successfully', 'data': serializer.data}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
 class VerifyOTPView(APIView):
     def post(self, request):
@@ -189,7 +233,12 @@ class VerifyOTPView(APIView):
             user.is_verified = True
             user.otp = None  # Clear the OTP after successful verification
             user.save()
-            return Response({'message': 'OTP verified successfully'}, status=status.HTTP_200_OK)
+            # return Response({'message': 'OTP verified successfully'}, status=status.HTTP_200_OK)
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            }, status=status.HTTP_200_OK)
         return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
 
 

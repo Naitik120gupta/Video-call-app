@@ -10,13 +10,20 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'phone_number', 'email', 'password']
+        fields = ['first_name', 'last_name', 'phone', 'email', 'password','dob', 'institution', 'occupation']
 
+    def update(self, instance, validated_data):
+        instance.dob = validated_data.get('dob', instance.dob)
+        instance.institution = validated_data.get('institution', instance.institution)
+        instance.occupation = validated_data.get('occupation', instance.occupation)
+        instance.save()
+        return instance
+    
     def create(self, validated_data):
         user = User.objects.create_user(
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
-            phone_number=validated_data.get('phone_number'),
+            phone=validated_data.get('phone'),
             email=validated_data['email'],
             password=validated_data['password']
         )
@@ -40,9 +47,9 @@ class LoginSerializer(serializers.Serializer):
                 "first_name": user.first_name,
                 "last_name": user.last_name,
                 "email": user.email,
-                "phone_number": user.phone_number,
+                "phone": user.phone,
+
             }
-            
             return {
                 "user": user_data,
                 "token": str(RefreshToken.for_user(user).access_token),
