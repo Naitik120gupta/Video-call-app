@@ -207,7 +207,7 @@ class profileview(APIView):
 
         user = User.objects.filter(email=email).first()
         if user:
-            return JsonResponse({'First name:':user.first_name,'Last name':user.last_name,'email':user.email,'Phone':user.phone})
+            return JsonResponse({'First name:':user.first_name,'Last name':user.last_name,'email':user.email,'Phone':user.phone,'DOB':user.dob,"Occupation":user.occupation,"Institution":user.institution})
 
 class UpdateUserInfoView(APIView):
     permission_classes = [IsAuthenticated]  # Require user authentication
