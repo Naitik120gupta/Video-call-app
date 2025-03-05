@@ -30,9 +30,7 @@ User = get_user_model()
 dotenv.load_dotenv()
 
 
-# APP_ID='2f3131394cc6417b91aa93cfde567a37'
-# APP_CERTIFICATE='d66d80fb791f48df8f91fdd513d82d32'
-# BASE_URL = "https://api.agora.io/v1"
+
 
 #Recording views
 def acquire_resource(request):
