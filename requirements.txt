@@ -1,7 +1,6 @@
 ﻿agora==1.2.3
 agora_python_server_sdk==2.1.4
 agora_token_builder==1.0.0
-argh==0.31.3
 asgiref==3.8.1
 attrs==24.2.0
 Automat==24.8.1
